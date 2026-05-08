@@ -19,6 +19,9 @@ namespace SistemaAlocacaoLab.API.Data
         public DbSet<Disciplina> Disciplinas { get; set; }
         public DbSet<DisciplinaSoftware> DisciplinaSoftwares { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Perfil> Perfis { get; set; }
+        public DbSet<Turma> Turmas { get; set; }
+        public DbSet<Alocacao> Alocacoes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LaboratorioSoftware>()
@@ -31,6 +34,9 @@ namespace SistemaAlocacaoLab.API.Data
             modelBuilder.Entity<Disciplina>().ToTable("Disciplina");
             modelBuilder.Entity<DisciplinaSoftware>().ToTable("Disciplina_Software");
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
+            modelBuilder.Entity<Perfil>().ToTable("Perfil");
+            modelBuilder.Entity<Turma>().ToTable("Turmas");
+            modelBuilder.Entity<Alocacao>().ToTable("Alocacao");
         }
     }
 }
