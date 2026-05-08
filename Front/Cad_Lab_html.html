@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Laboratório</title>
+    <link rel="stylesheet" href="Cad_Lab_Css.css">
+    <style>
+        #toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 9999;
+        }
+        #toast.show { opacity: 1; }
+        #toast.success { background: #22c55e; }
+        #toast.error   { background: #ef4444; }
+
+        #lista-section { margin-top: 32px; }
+        #tabela-labs {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.93rem;
+        }
+        #tabela-labs th {
+            background: #1e3a5f;
+            color: #fff;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        #tabela-labs td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        #tabela-labs tr:hover td { background: #f0f6ff; }
+
+        .btn-editar {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+        .btn-deletar {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-editar:hover { background: #2563eb; }
+        .btn-deletar:hover { background: #b91c1c; }
+
+        .counter { display: flex; align-items: center; gap: 12px; }
+        .counter button {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 2px solid #1e3a5f;
+            background: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: bold;
+            color: #1e3a5f;
+        }
+        .counter button:hover { background: #1e3a5f; color: #fff; }
+        #qtd-display { font-size: 1.1rem; font-weight: 700; min-width: 30px; text-align: center; }
+
+        .status-buttons button { cursor: pointer; }
+        .status-buttons button.active {
+            background: #1e3a5f;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        Sistema de Alocação de Laboratórios - Cadastro
+    </header>
+
+    <div class="breadcrumb">
+        Início > Laboratórios > <span id="breadcrumb-label">Novo Cadastro</span>
+    </div>
+
+    <div class="box">
+        <h2>Cadastro de Laboratório de Informática</h2>
+
+        <input type="hidden" id="id-laboratorio">
+
+        <div class="grid-main">
+            <!-- IDENTIFICAÇÃO -->
+            <div class="card">
+                <h3>IDENTIFICAÇÃO</h3>
+                <label>Nome do Laboratório *</label>
+                <input id="nome-laboratorio" placeholder="Ex: Lab. Informática 1">
+
+                <div class="grid-2">
+                    <div>
+                        <label>Código / Sala</label>
+                        <input id="codigo-sala" placeholder="INF-101">
+                    </div>
+                </div>
+
+                <label>Bloco / Localização</label>
+                <input id="bloco-localizacao" placeholder="Ex: Bloco B, 2º Andar">
+
+                <label>Responsável de TI</label>
+                <input id="responsavel-ti" placeholder="Nome do responsável">
+            </div>
+
+            <!-- CAPACIDADE -->
+            <div class="card">
+                <h3>CAPACIDADE</h3>
+                <label>Nº de Computadores *</label>
+                <div class="counter">
+                    <button type="button" onclick="alterarQtd(-1)">−</button>
+                    <span id="qtd-display">20</span>
+                    <button type="button" onclick="alterarQtd(1)">+</button>
+                </div>
+                <input type="hidden" id="qtd-computadores" value="20">
+
+                <label>Cap. Máx. de Alunos</label>
+                <input id="cap-max-alunos" type="number" value="40" min="1">
+                <small>Máx. 2 alunos / computador</small>
+            </div>
+
+            <!-- SOFTWARES -->
+            <div class="card full">
+                <h3>SOFTWARES DISPONÍVEIS</h3>
+                <label>Aplicativos Instalados</label>
+                <div class="tags">
+                    <span>Visual Studio ✕</span>
+                    <span>MongoDB ✕</span>
+                    <input placeholder="Digitar e pressionar Enter...">
+                </div>
+                <div class="checkboxes">
+                    <label><input type="checkbox" checked> Acesso à internet</label>
+                    <label><input type="checkbox"> Projetor / TV</label>
+                    <label><input type="checkbox" checked> Ar-condicionado</label>
+                </div>
+            </div>
+
+            <!-- STATUS -->
+            <div class="card full">
+                <h3>STATUS OPERACIONAL</h3>
+                <input type="hidden" id="status-operacional" value="Disponível">
+                <div class="status-buttons">
+                    <button type="button" class="active" onclick="selecionarStatus(this, 'Disponível')">Disponível</button>
+                    <button type="button" onclick="selecionarStatus(this, 'Manutenção')">Manutenção</button>
+                    <button type="button" onclick="selecionarStatus(this, 'Reservado')">Reservado</button>
+                    <button type="button" onclick="selecionarStatus(this, 'Inativo')">Inativo</button>
+                </div>
+            </div>
+
+            <!-- OBSERVAÇÕES -->
+            <div class="card full">
+                <h3>OBSERVAÇÕES</h3>
+                <textarea id="observacoes" placeholder="Informações adicionais, restrições de uso..."></textarea>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="secondary" onclick="limparFormulario()">Limpar</button>
+            <button class="secondary" onclick="limparFormulario()">Cancelar</button>
+            <button class="primary" id="btn-salvar" onclick="salvarLaboratorio()">Cadastrar Laboratório</button>
+        </div>
+        <p class="required">* Campos obrigatórios</p>
+    </div>
+
+    <!-- LISTAGEM -->
+    <div class="box" id="lista-section">
+        <h2>Laboratórios Cadastrados</h2>
+        <table id="tabela-labs">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Sala</th>
+                    <th>Bloco</th>
+                    <th>Computadores</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-labs">
+                <tr><td colspan="7" style="text-align:center;color:#888;">Carregando...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    const API_URL = 'http://localhost:5000/api/laboratorio';
+
+    function alterarQtd(delta) {
+        const hidden = document.getElementById('qtd-computadores');
+        const display = document.getElementById('qtd-display');
+        let val = parseInt(hidden.value) + delta;
+        if (val < 1) val = 1;
+        hidden.value = val;
+        display.textContent = val;
+    }
+
+    function selecionarStatus(btn, valor) {
+        document.querySelectorAll('.status-buttons button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('status-operacional').value = valor;
+    }
+
+    function showToast(msg, tipo = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `show ${tipo}`;
+        setTimeout(() => t.className = '', 3000);
+    }
+
+    async function carregarLaboratorios() {
+        const tbody = document.getElementById('tbody-labs');
+        try {
+            const res = await fetch(API_URL);
+            const dados = await res.json();
+
+            if (!dados.length) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#888;">Nenhum laboratório cadastrado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = dados.map(lab => `
+                <tr>
+                    <td>${lab.idLaboratorio}</td>
+                    <td>${lab.nomeLaboratorio}</td>
+                    <td>${lab.codigoSala ?? '—'}</td>
+                    <td>${lab.blocoLocalizacao ?? '—'}</td>
+                    <td>${lab.qtdComputadores}</td>
+                    <td>${lab.statusOperacional}</td>
+                    <td>
+                        <button class="btn-editar" onclick="editarLaboratorio(${lab.idLaboratorio})">Editar</button>
+                        <button class="btn-deletar" onclick="deletarLaboratorio(${lab.idLaboratorio})">Excluir</button>
+                    </td>
+                </tr>
+            `).join('');
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#ef4444;">Erro ao conectar com a API.</td></tr>';
+        }
+    }
+
+    async function salvarLaboratorio() {
+        const id   = document.getElementById('id-laboratorio').value;
+        const nome = document.getElementById('nome-laboratorio').value.trim();
+        const qtd  = parseInt(document.getElementById('qtd-computadores').value);
+
+        if (!nome) { showToast('Informe o nome do laboratório!', 'error'); return; }
+        if (!qtd || qtd < 1) { showToast('Qtd. de computadores inválida!', 'error'); return; }
+
+        const body = {
+            nomeLaboratorio:   nome,
+            qtdComputadores:   qtd,
+            codigoSala:        document.getElementById('codigo-sala').value.trim() || null,
+            blocoLocalizacao:  document.getElementById('bloco-localizacao').value.trim() || null,
+            responsavelTi:     document.getElementById('responsavel-ti').value.trim() || null,
+            capMaxAlunos:      parseInt(document.getElementById('cap-max-alunos').value) || null,
+            statusOperacional: document.getElementById('status-operacional').value,
+            observacoes:       document.getElementById('observacoes').value.trim() || null,
+            idsSoftwares:      []
+        };
+
+        try {
+            let res;
+            if (id) {
+                res = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (res.ok) showToast('Laboratório atualizado com sucesso!');
+                else showToast('Erro ao atualizar.', 'error');
+            } else {
+                res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (res.ok || res.status === 201) showToast('Laboratório cadastrado com sucesso!');
+                else showToast('Erro ao cadastrar.', 'error');
+            }
+
+            limparFormulario();
+            carregarLaboratorios();
+        } catch (e) {
+            showToast('Erro ao conectar com a API.', 'error');
+        }
+    }
+
+    async function editarLaboratorio(id) {
+        try {
+            const res = await fetch(`${API_URL}/${id}`);
+            const lab = await res.json();
+
+            document.getElementById('id-laboratorio').value      = lab.idLaboratorio;
+            document.getElementById('nome-laboratorio').value    = lab.nomeLaboratorio;
+            document.getElementById('codigo-sala').value         = lab.codigoSala ?? '';
+            document.getElementById('bloco-localizacao').value   = lab.blocoLocalizacao ?? '';
+            document.getElementById('responsavel-ti').value      = lab.responsavelTi ?? '';
+            document.getElementById('cap-max-alunos').value      = lab.capMaxAlunos ?? 40;
+            document.getElementById('observacoes').value         = lab.observacoes ?? '';
+            document.getElementById('qtd-computadores').value    = lab.qtdComputadores;
+            document.getElementById('qtd-display').textContent   = lab.qtdComputadores;
+            document.getElementById('status-operacional').value  = lab.statusOperacional;
+
+            document.querySelectorAll('.status-buttons button').forEach(b => {
+                b.classList.toggle('active', b.textContent === lab.statusOperacional);
+            });
+
+            document.getElementById('btn-salvar').textContent = 'Salvar Alterações';
+            document.getElementById('breadcrumb-label').textContent = 'Editar Cadastro';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (e) {
+            showToast('Erro ao carregar laboratório.', 'error');
+        }
+    }
+
+    async function deletarLaboratorio(id) {
+        if (!confirm('Tem certeza que deseja excluir este laboratório?')) return;
+        try {
+            const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            if (res.status === 204) {
+                showToast('Laboratório excluído!');
+                carregarLaboratorios();
+            } else {
+                showToast('Erro ao excluir.', 'error');
+            }
+        } catch (e) {
+            showToast('Erro ao conectar com a API.', 'error');
+        }
+    }
+
+    function limparFormulario() {
+        document.getElementById('id-laboratorio').value      = '';
+        document.getElementById('nome-laboratorio').value    = '';
+        document.getElementById('codigo-sala').value         = '';
+        document.getElementById('bloco-localizacao').value   = '';
+        document.getElementById('responsavel-ti').value      = '';
+        document.getElementById('cap-max-alunos').value      = 40;
+        document.getElementById('observacoes').value         = '';
+        document.getElementById('qtd-computadores').value    = 20;
+        document.getElementById('qtd-display').textContent   = 20;
+        document.getElementById('status-operacional').value  = 'Disponível';
+
+        document.querySelectorAll('.status-buttons button').forEach(b => {
+            b.classList.toggle('active', b.textContent === 'Disponível');
+        });
+
+        document.getElementById('btn-salvar').textContent = 'Cadastrar Laboratório';
+        document.getElementById('breadcrumb-label').textContent = 'Novo Cadastro';
+    }
+
+    carregarLaboratorios();
+</script>
+</body>
+</html>
