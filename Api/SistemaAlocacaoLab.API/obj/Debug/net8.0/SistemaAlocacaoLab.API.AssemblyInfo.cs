@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SistemaAlocacaoLab.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e14dbfd934287a1744301dbaee309e5968915a6f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49f7a0c2ebae6c16db53cfb06550b2848d3559eb")]
 [assembly: System.Reflection.AssemblyProductAttribute("SistemaAlocacaoLab.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SistemaAlocacaoLab.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

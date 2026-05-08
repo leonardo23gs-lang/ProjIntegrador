@@ -4492,11 +4492,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\SistemaAlocacaoLab.API\\SistemaAlocacaoLab.API.csproj",
+      "projectUniqueName": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\Api\\SistemaAlocacaoLab.API\\SistemaAlocacaoLab.API.csproj",
       "projectName": "SistemaAlocacaoLab.API",
-      "projectPath": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\SistemaAlocacaoLab.API\\SistemaAlocacaoLab.API.csproj",
+      "projectPath": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\Api\\SistemaAlocacaoLab.API\\SistemaAlocacaoLab.API.csproj",
       "packagesPath": "C:\\Users\\Leonardo Gomes\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\SistemaAlocacaoLab.API\\obj\\",
+      "outputPath": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\Api\\SistemaAlocacaoLab.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Leonardo Gomes\\AppData\\Roaming\\NuGet\\NuGet.Config"

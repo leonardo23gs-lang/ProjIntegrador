@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/8qcxfXr8Ac=",
+  "dgSpecHash": "8xGu4Nh6G4E=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\SistemaAlocacaoLab.API\\SistemaAlocacaoLab.API.csproj",
+  "projectFilePath": "C:\\Users\\Leonardo Gomes\\Documents\\GitHub\\ProjIntegrador\\ProjIntegrador\\Api\\SistemaAlocacaoLab.API\\SistemaAlocacaoLab.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Leonardo Gomes\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Leonardo Gomes\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
