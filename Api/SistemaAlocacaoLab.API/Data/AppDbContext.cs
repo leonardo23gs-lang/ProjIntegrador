@@ -16,17 +16,21 @@ namespace SistemaAlocacaoLab.API.Data
         public DbSet<Laboratorio> Laboratorios { get; set; }
         public DbSet<Software> Softwares { get; set; }
         public DbSet<LaboratorioSoftware> LaboratorioSoftwares { get; set; }
-
+        public DbSet<Disciplina> Disciplinas { get; set; }
+        public DbSet<DisciplinaSoftware> DisciplinaSoftwares { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configura a chave primária composta da tabela associativa
             modelBuilder.Entity<LaboratorioSoftware>()
                 .HasKey(ls => new { ls.IdLaboratorio, ls.IdSoftware });
-
-            // Mapeia os nomes reais das tabelas no banco
             modelBuilder.Entity<Laboratorio>().ToTable("Laboratorio");
             modelBuilder.Entity<Software>().ToTable("Software");
             modelBuilder.Entity<LaboratorioSoftware>().ToTable("Laboratorio_Software");
+            modelBuilder.Entity<DisciplinaSoftware>()
+            .HasKey(ds => new { ds.IdDisciplina, ds.IdSoftware });
+            modelBuilder.Entity<Disciplina>().ToTable("Disciplina");
+            modelBuilder.Entity<DisciplinaSoftware>().ToTable("Disciplina_Software");
+            modelBuilder.Entity<Usuario>().ToTable("Usuario");
         }
     }
 }
