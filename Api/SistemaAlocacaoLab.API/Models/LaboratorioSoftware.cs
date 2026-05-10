@@ -2,16 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace SistemaAlocacaoLab.API.Models
 {
-    public class Software
+    public class LaboratorioSoftware
     {
-        public int IdSoftware { get; set; }
-        public string NomeSoftware { get; set; } = string.Empty;
-        public string VersaoSoftware { get; set; } = string.Empty;
+        public int IdLaboratorio { get; set; }
+        public Laboratorio Laboratorio { get; set; } = null!;
 
-        public ICollection<LaboratorioSoftware> LaboratorioSoftwares { get; set; } 
-            = new List<LaboratorioSoftware>();
+        public int IdSoftware { get; set; }
+        public Software Software { get; set; } = null!;
     }
 }
