@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alocação</title>
+    <link rel="stylesheet" href="Alc_Lab_Css.css">
+    <link rel="stylesheet" href="Navbar.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="navbar-brand" href="Login_html.html">🖥️ Alocação de Labs</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="navbar-links" id="navLinks">
+        <a href="Tela_Login.html">Login</a>
+        <a href="Menu_html.html">Início</a>
+        <a href="Alc_Lab_html.html" class="ativo">Alocação</a>
+        <a href="Cad_Lab_html.html">Cad. Laboratório</a>
+        <a href="Cad_Dscpl_html.html">Cad. Disciplina</a>
+        <a href="Cadastro_Alunos.html">Cad. Alunos</a>
+        <a href="Tela_Login.html" class="navbar-sair">Sair</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <header class="header">
+        Sistema de Alocação de Laboratórios - Alocação
+    </header>
+
+    <div class="estrutura">
+        Início > Laboratórios > <span>Tela de Alocação</span>
+    </div>
+
+    <section class="box">
+
+        <div class="topo">
+            <h2>Tela de Alocação de Laboratórios</h2>
+            <button class="botao" type="button">Diretor Acadêmico</button>
+        </div>
+
+        <div class="card">
+            <h3>IDENTIFICAÇÃO</h3>
+            <hr>
+
+            <div class="filtros">
+                <div class="campo">
+                    <label>Curso:</label>
+                    <select id="filtroCurso" onchange="carregarAlocacoes()">
+                        <option value="">Todos</option>
+                        <option value="SI">Sistemas de Informação</option>
+                        <option value="CC">Ciência da Computação</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Período:</label>
+                    <select id="filtroPeriodo" onchange="carregarAlocacoes()">
+                        <option value="">Todos</option>
+                        <option value="Matutino">Matutino</option>
+                        <option value="Noturno">Noturno</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filtros2">
+                <div class="campo grande">
+                    <label>Disciplina</label>
+                    <input type="text" id="buscaDisciplina" placeholder="Buscar disciplina..." onkeyup="filtrarTabela()">
+                </div>
+                
+                <div class="campo grande">
+                    <label>Status</label>
+                    <div class="legenda">
+                        <span class="verde">● Disponível</span>
+                        <span class="amarelo">● Reservado</span>
+                        <span class="vermelho">● Em Conflito</span>
+                        <span class="cinza">● Indisponível</span>
+                    </div>    
+                </div>    
+            </div>
+            
+            <div class="tabela">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkAll" onclick="toggleAll()"></th>
+                            <th>Disciplina</th>
+                            <th>Turma</th>
+                            <th>Dias da Semana</th>
+                            <th>Horário</th>
+                            <th>Laboratório</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-alocacoes">
+                        <!-- Tabela preenchida dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="rodape-tabela">
+                <span id="info-paginacao">Carregando...</span>
+                <div class="paginacao">
+                    <button type="button">Anterior</button>
+                    <button type="button" class="ativo">1</button>
+                    <button type="button">Próximo</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <a href="Menu_html.html"><button class="secundario" type="button">← Voltar</button></a>
+            <button class="secundario" type="button" onclick="carregarAlocacoes()">Atualizar</button>
+            <button class="secundario" type="button" onclick="window.location.reload()">Cancelar</button>
+            <button class="primario" type="button" onclick="confirmarAlocacoes()">Confirmar</button>
+        </div>
+
+    </section>
+
+</div>
+
+<script src="Navbar.js"></script>
+
+<!-- SCRIPT DE INTEGRAÇÃO COM ASP.NET CORE -->
+<!-- ... (resto do HTML acima permanece igual) ... -->
+
+<script>
+    // Configurações da API
+    const API_ALOCACAO_URL = 'http://localhost:5000/api/Alocacao';
+    const API_KEY = 'SUA_CHAVE_AQUI'; // Substitua pela sua chave real
+
+    document.addEventListener('DOMContentLoaded', () => {
+        carregarAlocacoes();
+    });
+
+    async function carregarAlocacoes() {
+        const tbody = document.getElementById('tbody-alocacoes');
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Carregando dados...</td></tr>';
+
+        try {
+            const response = await fetch(API_ALOCACAO_URL, {
+                method: 'GET',
+                headers: {
+                    'X-Api-Key': API_KEY, // Nome do header definido no seu Backend
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Erro: ' + response.status + '</td></tr>';
+                return;
+            }
+
+            const alocacoes = await response.json();
+            document.getElementById('info-paginacao').innerText = `Mostrando ${alocacoes.length} disciplinas`;
+
+            tbody.innerHTML = alocacoes.map(aloc => {
+                let classeCss = 'cinza';
+                if (aloc.status === 'Disponível') classeCss = 'verde';
+                else if (aloc.status === 'Reservado' || aloc.status === 'Aprovada') classeCss = 'amarelo';
+                else if (aloc.status === 'Conflito' || aloc.status === 'Rejeitada') classeCss = 'vermelho';
+
+                return `
+                    <tr class="linha-tabela">
+                        <td><input type="checkbox" class="check-alocacao" value="${aloc.idAlocacao}"></td>
+                        <td class="nome-disc">${aloc.nomeDisciplina}</td>
+                        <td>${aloc.turma}</td>
+                        <td>${aloc.diasSemana}</td>
+                        <td>${aloc.horario}</td>
+                        <td>${aloc.nomeLaboratorio}</td>
+                        <td class="${classeCss}">● ${aloc.status}</td>
+                    </tr>`;
+            }).join('');
+
+        } catch (error) {
+            console.error(error);
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: red;">Erro de conexão com o servidor.</td></tr>';
+        }
+    }
+
+    async function confirmarAlocacoes() {
+        const checkboxes = document.querySelectorAll('.check-alocacao:checked');
+        const idsSelecionados = Array.from(checkboxes).map(cb => parseInt(cb.value));
+
+        if (idsSelecionados.length === 0) {
+            alert("Selecione pelo menos uma alocação.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_ALOCACAO_URL}/ConfirmarEmLote`, {
+                method: 'POST',
+                headers: { 
+                    'X-Api-Key': API_KEY,
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify(idsSelecionados)
+            });
+
+            if (response.ok) {
+                alert("Sucesso!");
+                carregarAlocacoes();
+            } else {
+                alert("Erro ao confirmar alocações.");
+            }
+        } catch (error) {
+            alert("Falha na conexão.");
+        }
+    }
+</script>
+</body>
+</html>

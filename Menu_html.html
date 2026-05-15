@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Acesso ao Sistema</title>
+    <link rel="stylesheet" href="Menu_Css.css">
+    <link rel="stylesheet" href="Navbar.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="navbar-brand" href="Login_html.html">🖥️ Alocação de Labs</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="navbar-links" id="navLinks">
+        <a href="Tela_Login.html">Login</a>
+        <a href="Menu_html.html" class="ativo">Início</a>
+        <a href="Alc_Lab_html.html">Alocação</a>
+        <a href="Cad_Lab_html.html">Cad. Laboratório</a>
+        <a href="Cad_Dscpl_html.html">Cad. Disciplina</a>
+        <a href="Cadastro_Alunos.html">Cad. Alunos</a>
+        <a href="Tela_Login.html" class="navbar-sair" onclick="fazerLogout()">Sair</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+        Sistema de Alocação de Laboratórios
+    </header>
+
+    <!-- BOX -->
+    <div class="box">
+
+        <h2>Acesso ao Sistema</h2>
+
+        <!-- LOGIN -->
+        <div class="card login">
+            <h3>IDENTIFICAÇÃO DO USUÁRIO</h3>
+
+            <form id="loginForm">
+                <label>E-mail / Matrícula *</label>
+                <input type="text" id="emailUsuario" placeholder="Digite seu e-mail ou matrícula" required>
+
+                <label>Senha *</label>
+                <input type="password" id="senhaUsuario" placeholder="Digite sua senha" required>
+
+                <label>Perfil de Acesso *</label>
+                <!-- Os values foram adicionados para corresponder aos IDs do banco de dados (Tabela Perfil) -->
+                <select id="perfilUsuario" required>
+                    <option value="">Selecionar...</option>
+                    <option value="1">Administrador</option>
+                    <option value="2">Professor</option>
+                    <option value="3">Diretor Acadêmico</option>
+                </select>
+
+                <div class="login-actions" style="margin-top: 15px;">
+                    <button type="submit" class="primary">Acessar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- MENU DE NAVEGAÇÃO -->
+        <div class="card menu">
+            <h3>ACESSO RÁPIDO</h3>
+
+            <div class="menu-grid">
+                <a href="Cad_Dscpl_html.html">Cadastro de Disciplinas</a>
+                <a href="Cad_Lab_html.html">Cadastro de Laboratórios</a>
+                <a href="Alc_Lab_html.html">Tela de Alocação</a>
+                <a href="Cad_Aln_html.html">Cadastro de Alunos</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="Navbar.js"></script>
+
+<!-- SCRIPT DE INTEGRAÇÃO COM ASP.NET CORE -->
+<script>
+    // Ajuste a porta (7000) para a porta real da sua API C#
+   // A URL correta para a tela de Laboratório, usando a variável certa:
+    const API_LOGIN_URL = 'http://localhost:5000/api/Usuario/Login';
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Evita recarregar a página
+
+        const email = document.getElementById('emailUsuario').value.trim();
+        const senha = document.getElementById('senhaUsuario').value.trim();
+        const perfilId = document.getElementById('perfilUsuario').value;
+
+        if (!email || !senha || !perfilId) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        const payload = {
+            EmailUsuario: email,
+            SenhaUsuario: senha,
+            IdPerfil: parseInt(perfilId)
+        };
+
+        try {
+            const response = await fetch(API_LOGIN_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                // Sucesso no login
+                const data = await response.json();
+                
+                // Salva o estado de login no LocalStorage para usar em outras telas
+                localStorage.setItem('usuarioLogado', 'true');
+                if (data.token) localStorage.setItem('token', data.token);
+                
+                alert("Login efetuado com sucesso! Bem-vindo ao sistema.");
+                
+                // Opcional: Limpar formulário após logar
+                document.getElementById('loginForm').reset();
+                
+            } else {
+                alert("E-mail, senha ou perfil incorretos. Verifique suas credenciais.");
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            alert("Erro de conexão com o servidor. O backend (ASP.NET Core) está rodando?");
+        }
+    });
+
+    // Função simples para o botão "Sair" na Navbar
+    function fazerLogout() {
+        localStorage.removeItem('usuarioLogado');
+        localStorage.removeItem('token');
+    }
+</script>
+
+</body>
+</html>
