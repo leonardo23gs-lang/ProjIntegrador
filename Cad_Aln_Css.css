@@ -1,0 +1,171 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+}
+
+.header {
+    background: #2c4a6e;
+    color: white;
+    padding: 12px;
+    text-align: center;
+}
+
+.breadcrumb {
+    background: #e6e6e6;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.breadcrumb span {
+    color: #2c4a6e;
+    font-weight: bold;
+}
+
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.box h2{
+    color: black;
+    font-size: 16px;
+    border-left: 4px solid #2c4a6e;
+    padding-left: 10px;
+}
+
+.section {
+    background: #f7f7f7;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.section h3 {
+    margin-top: 0;
+    color: #2c4a6e;
+    font-size: 14px;
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+
+.grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+input, select, textarea {
+    width: 95%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+textarea {
+    height: 80px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 13px;
+}
+
+th {
+    background: #eaeaea;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.pagination button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    border: none;
+    background: #d0d0d0;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #aeb7c2;
+}
+
+.pagination .active {
+    background: #2c4a6e;
+    color: white;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.primary {
+    background: #2c4a6e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.primary:hover{
+    background-color: #aeb7c2;
+}
+
+.secondary {
+    background: #cfd8e3;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.secondary:hover{
+    background-color: #aeb7c2;
+}
+
+.required {
+    color: red;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+/* ... (estilos anteriores) ... */
+
+@media (max-width: 630px) {
+    .container { margin: 10px; }
+    .grid-4, .grid-5 { grid-template-columns: 1fr; }
+    .header { font-size: 14px; padding: 10px; }
+    .breadcrumb { font-size: 12px; }
+    .box { padding: 15px; }
+    .box h2 { font-size: 14px; border-left: 3px solid #2c4a6e; padding-left: 6px; }
+    .section { padding: 10px; }
+    .actions { flex-direction: column; align-items: stretch; }
+    .actions button { width: 100%; }
+    table { display: block; overflow-x: auto; } /* Scroll horizontal para mobile */
+    th, td { font-size: 12px; }
+} /* Fechamento correto com chave */
