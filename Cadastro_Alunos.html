@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Alunos</title>
+    <link rel="stylesheet" href="Cad_Aln_Css.css">
+    <link rel="stylesheet" href="Navbar.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="navbar-brand" href="Login_html.html">🖥️ Alocação de Labs</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="navbar-links" id="navLinks">
+        <a href="Tela_Login.html">Login</a>
+        <a href="Menu_html.html">Início</a>
+        <a href="Alc_Lab_html.html">Alocação</a>
+        <a href="Cad_Lab_html.html">Cad. Laboratório</a>
+        <a href="Cad_Dscpl_html.html">Cad. Disciplina</a>
+        <a href="Cadastro_Alunos.html" class="ativo">Cad. Alunos</a>
+        <a href="Tela_Login.html" class="navbar-sair">Sair</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <header class="header">
+        <h1>Sistema de Alocação de Laboratórios - Cadastro</h1>
+    </header>
+
+    <div class="breadcrumb">
+        Início > Disciplinas > <span>Novo Cadastro</span>
+    </div>
+
+    <section class="box">
+        <h2>Cadastro de Alunos</h2>
+
+        <!-- IDENTIFICAÇÃO -->
+        <div class="section">
+            <h3>IDENTIFICAÇÃO</h3>
+            <hr>
+            <div class="grid-4">
+                <div>
+                    <label>Disciplina *</label>
+                    <select id="idDisciplina" onchange="carregarInfoDisciplina()">
+                        <option value="">Selecionar...</option>
+                        <option value="1">Algoritmos e Programação (A1)</option>
+                        <option value="2">Banco de Dados (A2)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Curso</label>
+                    <!-- Adicionado readonly pois deve vir preenchido da disciplina -->
+                    <input type="text" id="curso" readonly style="background-color: #f1f5f9;">
+                </div>
+
+                <div>
+                    <label>Período</label>
+                    <input type="text" id="periodo" readonly style="background-color: #f1f5f9;">
+                </div>
+
+                <div>
+                    <label>Laboratório Alocado</label>
+                    <input type="text" id="laboratorioAlocado" readonly style="background-color: #f1f5f9;">
+                </div>
+            </div>
+        </div>
+
+        <!-- ALUNOS -->
+        <div class="section">
+            <h3>ALUNOS</h3>
+            <hr>
+            <div class="grid-5">
+                <input type="text" id="matricula" placeholder="Matrícula *">
+                <input type="text" id="nomeAluno" placeholder="Nome do aluno *">
+                <input type="email" id="emailAluno" placeholder="E-mail institucional *">
+                <select id="turnoAluno">
+                    <option value="">Turno</option>
+                    <option value="Manhã">Manhã</option>
+                    <option value="Tarde">Tarde</option>
+                    <option value="Noite">Noite</option>
+                </select>
+                <select id="statusAluno">
+                    <option value="">Status</option>
+                    <option value="Ativo">Ativo</option>
+                    <option value="Inativo">Inativo</option>
+                </select>
+            </div>
+
+            <!-- TABELA DINÂMICA -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nome do Aluno</th>
+                        <th>E-mail Institucional</th>
+                        <th>Turno</th>
+                        <th>Status</th>
+                        <th>Computador</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-alunos">
+                    <!-- Os dados da API serão injetados aqui -->
+                    <tr>
+                        <td colspan="6" style="text-align:center;color:#888;">Nenhum aluno carregado...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <span id="contador-alunos">Mostrando 0 aluno(s)</span>
+                <div>
+                    <button>Anterior</button>
+                    <button class="active">1</button>
+                    <button>Próximo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- OBSERVAÇÕES -->
+        <div class="section">
+            <h3>OBSERVAÇÕES</h3>
+            <textarea id="observacoes" placeholder="Informações adicionais, sobre a turma ..."></textarea>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <a href="Menu_html.html"><button class="secondary" type="button">← Voltar</button></a>
+            <button class="secondary" type="button" onclick="limparFormularioAluno()">Limpar</button>
+            <button class="secondary" type="button" onclick="window.location.reload()">Cancelar</button>
+            <button class="primary" type="button" onclick="cadastrarAluno()">Cadastrar Aluno</button>
+        </div>
+
+        <p class="required">* Campos obrigatórios</p>
+
+    </section>
+
+</div>
+
+<script src="Navbar.js"></script>
+
+<!-- SCRIPT DE INTEGRAÇÃO COM ASP.NET CORE -->
+<script>
+    // URL do seu Controller de Alunos no Backend
+const API_ALUNO_URL = 'http://localhost:5000/api/Aluno';
+
+document.addEventListener('DOMContentLoaded', () => {
+    carregarAlunosDaTabela();
+});
+
+// Busca alunos e atualiza a tabela (GET)
+async function carregarAlunosDaTabela() {
+    const tbody = document.getElementById('tbody-alunos');
+    const contador = document.getElementById('contador-alunos');
+
+    try {
+        const response = await fetch(API_ALUNO_URL);
+        
+        if (!response.ok) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Erro ao carregar dados ou API offline.</td></tr>';
+            return;
+        }
+
+        const alunos = await response.json();
+
+        if (alunos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhum aluno cadastrado.</td></tr>';
+            contador.innerText = "Mostrando 0 aluno(s)";
+            return;
+        }
+
+        contador.innerText = `Mostrando ${alunos.length} aluno(s)`;
+
+        tbody.innerHTML = alunos.map(aluno => `
+            <tr>
+                <td>${aluno.matricula}</td>
+                <td>${aluno.nomeAluno}</td>
+                <td>${aluno.emailInstitucional}</td>
+                <td>${aluno.turno}</td>
+                <td>${aluno.status}</td>
+                <td>${aluno.computadorAlocado || 'Pendente'}</td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        console.error("Erro:", error);
+    }
+}
+
+// Envio do formulário (POST)
+async function cadastrarAluno() {
+    const idDisciplina = document.getElementById('idDisciplina').value;
+    const matricula = document.getElementById('matricula').value.trim();
+    const nome = document.getElementById('nomeAluno').value.trim();
+    const email = document.getElementById('emailAluno').value.trim();
+
+    if (!idDisciplina || !matricula || !nome || !email) {
+        alert("Preencha os campos obrigatórios (*)");
+        return;
+    }
+
+    const payload = {
+        IdDisciplina: parseInt(idDisciplina),
+        Matricula: matricula,
+        NomeAluno: nome,
+        EmailInstitucional: email,
+        Turno: document.getElementById('turnoAluno').value,
+        Status: document.getElementById('statusAluno').value,
+        Observacoes: document.getElementById('observacoes').value.trim()
+    };
+
+    try {
+        const response = await fetch(API_ALUNO_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert("✅ Aluno cadastrado com sucesso!");
+            limparFormularioAluno();
+            carregarAlunosDaTabela(); // Atualiza a lista automaticamente
+        } else {
+            const msg = await response.text();
+            alert("❌ Erro ao cadastrar: " + msg);
+        }
+    } catch (error) {
+        alert("⚠️ Falha na conexão com o servidor.");
+    }
+}
+
+function limparFormularioAluno() {
+    document.getElementById('matricula').value = '';
+    document.getElementById('nomeAluno').value = '';
+    document.getElementById('emailAluno').value = '';
+    document.getElementById('turnoAluno').value = '';
+    document.getElementById('statusAluno').value = '';
+    document.getElementById('observacoes').value = '';
+}
+</script>
+
+</body>
+</html>

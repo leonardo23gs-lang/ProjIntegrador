@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Disciplinas</title>
+    <link rel="stylesheet" href="Cad_Dscpl_Css.css">
+    <link rel="stylesheet" href="Navbar.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="navbar-brand" href="Login_html.html">🖥️ Alocação de Labs</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="navbar-links" id="navLinks">
+        <a href="Tela_Login.html">Login</a>
+        <a href="Menu_html.html">Início</a>
+        <a href="Alc_Lab_html.html">Alocação</a>
+        <a href="Cad_Lab_html.html">Cad. Laboratório</a>
+        <a href="Cad_Dscpl_html.html" class="ativo">Cad. Disciplina</a>
+        <a href="Cadastro_Alunos.html">Cad. Alunos</a>
+        <a href="Tela_Login.html" class="navbar-sair">Sair</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <header class="header">
+        Sistema de Alocação de Laboratórios - Cadastro
+    </header>
+
+    <div class="breadcrumb">
+        Início > Disciplinas > <span>Novo Cadastro</span>
+    </div>
+
+    <section class="box">
+
+        <h2>Cadastro de Disciplinas</h2>
+
+        <div class="card full">
+            <h3>IDENTIFICAÇÃO</h3>
+
+            <div class="grid-4">
+                <input type="text" id="nomeDisciplina" placeholder="Nome da disciplina *">
+                <input type="text" id="codigoDisciplina" placeholder="Código da disciplina *">
+                <input type="text" id="nomeTurma" placeholder="Turma *">
+                <select id="idCoordenador">
+                    <option value="">Coordenador responsável</option>
+                    <option value="1">Prof. Leandro</option>
+                    <option value="2">Prof. Silva</option>
+                </select>
+            </div>
+
+            <div class="grid-4">
+                <select id="cursoDisciplina">
+                    <option value="">Curso *</option>
+                    <option value="ADS">Análise e Desenv. de Sistemas</option>
+                    <option value="ENG">Engenharia de Software</option>
+                </select>
+                <select id="periodoDisciplina">
+                    <option value="">Período *</option>
+                    <option value="Matutino">Matutino</option>
+                    <option value="Noturno">Noturno</option>
+                </select>
+                <select id="modalidadeDisciplina">
+                    <option value="">Modalidade</option>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Hibrido">Híbrido</option>
+                </select>
+                <input type="text" id="cargaHoraria" placeholder="Carga horária semanal">
+            </div>
+        </div>
+        
+        <div class="grid-main">
+
+            <div class="card">
+                <h3>REQUISITOS DE SOFTWARES</h3>
+
+                <label>Aplicativos necessários *</label>
+
+                <div class="tags" id="tags-container">
+                    <span>Visual Studio <button type="button" onclick="removerTag(this)">✕</button></span>
+                    <span>MongoDB <button type="button" onclick="removerTag(this)">✕</button></span>
+                    <input type="text" id="input-software" placeholder="Digitar e pressionar Enter...">
+                </div>
+
+                <div class="checkboxes">
+                    <label><input type="checkbox" id="reqInternet" checked> Acesso à internet</label>
+                    <label><input type="checkbox" id="reqProjetor"> Projetor / TV</label>
+                    <label><input type="checkbox" id="reqAr" checked> Ar-condicionado</label>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>CAPACIDADE</h3>
+
+                <label>Nº de alunos *</label>
+                <div class="counter">
+                    <button type="button" id="btn-menos-alunos">-</button>
+                    <span id="qtd-alunos-display">20</span>
+                    <button type="button" id="btn-mais-alunos">+</button>
+                </div>
+
+                <p class="info">Computadores necessários: <strong id="comp-necessarios">10</strong></p>
+            </div>
+
+        </div>
+
+        <div class="grid-main">
+
+            <div class="card">
+                <h3>HORÁRIOS E DURAÇÃO</h3>
+
+                <label>Dias da semana *</label>
+                <div class="days" id="dias-semana">
+                    <button type="button" data-dia="Seg">Seg</button>
+                    <button type="button" data-dia="Ter">Ter</button>
+                    <button type="button" class="active" data-dia="Qua">Qua</button>
+                    <button type="button" data-dia="Qui">Qui</button>
+                    <button type="button" data-dia="Sex">Sex</button>
+                </div>
+
+                <div class="grid-4">
+                    <input type="time" id="horarioInicio" placeholder="Início">
+                    <input type="time" id="horarioFim" placeholder="Fim">
+                    <input type="text" id="duracaoAula" placeholder="Duração">
+                    <select id="semestreAno">
+                        <option value="">Semestre / Ano</option>
+                        <option value="1/2026">1/2026</option>
+                        <option value="2/2026">2/2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>OBSERVAÇÕES</h3>
+                <textarea id="observacoes" placeholder="Informações adicionais..."></textarea>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <a href="Menu_html.html"><button class="secondary" type="button">← Voltar</button></a>
+            <button class="secondary" type="button" onclick="limparFormulario()">Limpar</button>
+            <button class="secondary" type="button" onclick="window.location.reload()">Cancelar</button>
+            <button class="primary" type="button" onclick="cadastrarDisciplina()">Cadastrar Relatório</button>
+        </div>
+
+        <p class="required">* Campos obrigatórios</p>
+
+    </section>
+
+</div>
+
+<script src="Navbar.js"></script>
+
+<!-- SCRIPT DE INTEGRAÇÃO COM ASP.NET CORE E LÓGICA DA TELA -->
+<script>
+    // A URL correta para a tela de Laboratório, usando a variável certa:
+    // Configurações da API
+const API_DISCIPLINA_URL = 'http://localhost:5000/api/Disciplina';
+
+let qtdAlunos = 20;
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupCounterAlunos();
+    setupDiasSemana();
+    setupTagsSoftware();
+});
+
+// --- Lógica das Tags de Software ---
+function setupTagsSoftware() {
+    const inputSoftware = document.getElementById('input-software');
+    const container = document.getElementById('tags-container');
+
+    inputSoftware.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const valor = this.value.trim();
+            if (valor !== "") {
+                const span = document.createElement('span');
+                span.innerHTML = `${valor} <button type="button" onclick="removerTag(this)">✕</button>`;
+                container.insertBefore(span, inputSoftware);
+                this.value = '';
+            }
+        }
+    });
+}
+
+function removerTag(botao) {
+    botao.parentElement.remove();
+}
+
+// --- Lógica do Contador de Alunos ---
+function setupCounterAlunos() {
+    const btnMenos = document.getElementById('btn-menos-alunos');
+    const btnMais = document.getElementById('btn-mais-alunos');
+    const display = document.getElementById('qtd-alunos-display');
+    const infoComp = document.getElementById('comp-necessarios');
+    
+    function atualizarDisplay() {
+        display.innerText = qtdAlunos;
+        infoComp.innerText = Math.ceil(qtdAlunos / 2);
+    }
+
+    btnMenos.onclick = () => { 
+        qtdAlunos = Math.max(1, qtdAlunos - 1);
+        atualizarDisplay();
+    };
+    btnMais.onclick = () => { 
+        qtdAlunos++;
+        atualizarDisplay();
+    };
+}
+
+// --- Lógica dos Dias da Semana ---
+function setupDiasSemana() {
+    const botoesDias = document.querySelectorAll('#dias-semana button');
+    botoesDias.forEach(btn => {
+        btn.onclick = () => btn.classList.toggle('active');
+    });
+}
+
+// --- Envio de Dados (POST) ---
+async function cadastrarDisciplina() {
+    const diasSelecionados = Array.from(document.querySelectorAll('#dias-semana button.active'))
+                                  .map(btn => btn.getAttribute('data-dia'));
+
+    const softwares = Array.from(document.querySelectorAll('#tags-container span'))
+                           .map(span => span.innerText.replace(' ✕', '').trim());
+
+    const payload = {
+        NomeDisciplina: document.getElementById('nomeDisciplina').value.trim(),
+        CodigoDisciplina: document.getElementById('codigoDisciplina').value.trim(),
+        Turma: document.getElementById('nomeTurma').value.trim(),
+        IdCoordenador: parseInt(document.getElementById('idCoordenador').value),
+        Curso: document.getElementById('cursoDisciplina').value,
+        Periodo: document.getElementById('periodoDisciplina').value,
+        Modalidade: document.getElementById('modalidadeDisciplina').value,
+        CargaHoraria: parseInt(document.getElementById('cargaHoraria').value) || 0,
+        QuantidadeAlunos: qtdAlunos,
+        DiasDaSemana: diasSelecionados.join(','), 
+        HorarioInicio: document.getElementById('horarioInicio').value,
+        HorarioFim: document.getElementById('horarioFim').value,
+        SemestreAno: document.getElementById('semestreAno').value,
+        SoftwaresNecessarios: softwares,
+        ReqInternet: document.getElementById('reqInternet').checked,
+        ReqProjetor: document.getElementById('reqProjetor').checked,
+        ReqAr: document.getElementById('reqAr').checked,
+        Observacoes: document.getElementById('observacoes').value.trim()
+    };
+
+    // Validação básica de campos obrigatórios
+    if (!payload.NomeDisciplina || !payload.CodigoDisciplina || !payload.IdCoordenador) {
+        alert("Preencha os campos obrigatórios (*)");
+        return;
+    }
+
+    try {
+        const response = await fetch(API_DISCIPLINA_URL, {
+            method: 'POST',
+            headers: { 
+                'X-Api-Key': API_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert("✅ Disciplina cadastrada com sucesso!");
+            window.location.reload();
+        } else {
+            const erro = await response.text();
+            alert("❌ Erro ao cadastrar: " + erro);
+        }
+    } catch (error) {
+        alert("⚠️ Falha na conexão com o servidor.");
+    }
+}
+</script>
+</body>
+</html>

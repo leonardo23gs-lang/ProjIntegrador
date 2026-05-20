@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Laboratório</title>
+    <link rel="stylesheet" href="Cad_Lab_Css.css">
+    <link rel="stylesheet" href="Navbar.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="navbar-brand" href="Login_html.html">🖥️ Alocação de Labs</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="navbar-links" id="navLinks">
+        <a href="Tela_Login.html">Login</a>
+        <a href="Menu_html.html">Início</a>
+        <a href="Alc_Lab_html.html">Alocação</a>
+        <a href="Cad_Lab_html.html" class="ativo">Cad. Laboratório</a>
+        <a href="Cad_Dscpl_html.html">Cad. Disciplina</a>
+        <a href="Cadastro_Alunos.html">Cad. Alunos</a>
+        <a href="Tela_Login.html" class="navbar-sair">Sair</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <header class="header">
+        Sistema de Alocação de Laboratórios - Cadastro
+    </header>
+
+    <div class="estrutura">
+        Início > Laboratórios > <span>Novo Cadastro</span>
+    </div>
+
+    <section class="box">
+
+        <h2>Cadastro de Laboratório de Informática</h2>
+
+        <div class="grid-main">
+
+            <!-- IDENTIFICAÇÃO -->
+            <div class="card">
+                <h3>IDENTIFICAÇÃO</h3>
+
+                <label>Nome do Laboratório *</label>
+                <input type="text" id="nomeLaboratorio" placeholder="Ex: Lab. Informática 1">
+
+                <div class="grid-2">
+                    <div>
+                        <label>Código / Sala *</label>
+                        <input type="text" id="codigoSala" placeholder="INF-101">
+                    </div>
+                </div>
+
+                <label>Bloco / Localização</label>
+                <input type="text" id="blocoLocalizacao" placeholder="Ex: Bloco B, 2º Andar">
+
+                <label>Responsável de TI</label>
+                <select id="responsavelTi">
+                    <option value="">Selecionar...</option>
+                    <option value="João Silva">João Silva</option>
+                    <option value="Maria Souza">Maria Souza</option>
+                </select>
+            </div>
+
+            <!-- CAPACIDADE -->
+            <div class="card">
+                <h3>CAPACIDADE</h3>
+
+                <label>Nº de Computadores *</label>
+                <br>
+                <div class="counter">
+                    <button type="button" id="btn-menos">-</button>
+                    <span id="qtd-display">20</span>
+                    <button type="button" id="btn-mais">+</button>
+                </div>
+
+                <label>Cap. Máx. de Alunos</label>
+                <input type="number" id="capMaxAlunos" value="40">
+                <small>Máx. 2 alunos / computador</small>
+            </div>
+
+            <!-- SOFTWARES -->
+            <div class="card full">
+                <h3>SOFTWARES DISPONÍVEIS</h3>
+
+                <label>Aplicativos Instalados *</label>
+
+                <div class="tags">
+                    <span>Visual Studio ✕</span>
+                    <span>MongoDB ✕</span>
+                    <input type="text" placeholder="Digitar e pressionar Enter...">
+                </div>
+
+                <div class="checkboxes">
+                    <label><input type="checkbox" checked> Acesso à internet</label>
+                    <label><input type="checkbox"> Projetor / TV</label>
+                    <label><input type="checkbox" checked> Ar-condicionado</label>
+                </div>
+            </div>
+
+            <!-- STATUS -->
+            <div class="card full">
+                <h3>STATUS OPERACIONAL</h3>
+
+                <div class="status-buttons">
+                    <button type="button" class="active">Disponível</button>
+                    <button type="button">Manutenção</button>
+                    <button type="button">Reservado</button>
+                    <button type="button">Inativo</button>
+                </div>
+            </div>
+
+            <!-- OBSERVAÇÕES -->
+            <div class="card full">
+                <h3>OBSERVAÇÕES</h3>
+                <textarea id="observacoes" placeholder="Informações adicionais, restrições de uso..."></textarea>
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <a href="Menu_html.html"><button class="secondary" type="button">← Voltar</button></a>
+            <button class="secondary" type="button" onclick="limparFormulario()">Limpar</button>
+            <button class="secondary" type="button" onclick="window.location.reload()">Cancelar</button>
+            <button class="primary" type="button" onclick="cadastrarLaboratorio()">Cadastrar Laboratório</button>
+        </div>
+
+        <p class="required">* Campos obrigatórios</p>
+
+    </section>
+
+</div>
+
+<script src="Navbar.js"></script>
+
+<!-- SCRIPT DE INTEGRAÇÃO COM ASP.NET CORE -->
+<script>
+    // A URL para o seu endpoint de Laboratório
+const API_URL = 'http://localhost:5165/api/Laboratorio';
+
+let currentQty = 20;
+let selectedStatus = "Disponível";
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupCounter();
+    setupStatus();
+});
+
+// Lógica do Contador
+function setupCounter() {
+    const btnMenos = document.getElementById('btn-menos');
+    const btnMais = document.getElementById('btn-mais');
+    const display = document.getElementById('qtd-display');
+    
+    btnMenos.onclick = () => { 
+        currentQty = Math.max(1, currentQty - 1);
+        display.innerText = currentQty;
+    };
+    btnMais.onclick = () => { 
+        currentQty++;
+        display.innerText = currentQty;
+    };
+}
+
+// Lógica dos Botões de Status
+function setupStatus() {
+    const buttons = document.querySelectorAll('.status-buttons button');
+    buttons.forEach(btn => {
+        btn.onclick = () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedStatus = btn.innerText;
+        };
+    });
+}
+
+// Função de Envio para o ASP.NET Core
+async function cadastrarLaboratorio() {
+    const nome = document.getElementById('nomeLaboratorio').value.trim();
+    const sala = document.getElementById('codigoSala').value.trim();
+
+    if (!nome || !sala) {
+        alert("Preencha os campos obrigatórios (*)");
+        return;
+    }
+
+    const payload = {
+        NomeLaboratorio: nome,
+        QtdComputadores: currentQty,
+        CodigoSala: sala,
+        BlocoLocalizacao: document.getElementById('blocoLocalizacao').value.trim(),
+        ResponsavelTi: document.getElementById('responsavelTi').value || null,
+        CapMaxAlunos: parseInt(document.getElementById('capMaxAlunos').value) || null,
+        StatusOperacional: selectedStatus,
+        Observacoes: document.getElementById('observacoes').value.trim()
+    };
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+                // Aqui você adicionaria o header da API futuramente se precisar
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert("✅ Laboratório cadastrado com sucesso!");
+            limparFormulario();
+        } else {
+            const erroTxt = await response.text();
+            alert("❌ Erro ao cadastrar. Verifique o console.");
+            console.error("Erro do servidor:", erroTxt);
+        }
+    } catch (error) {
+        alert("⚠️ Falha na conexão com o servidor.");
+        console.error("Erro de requisição:", error);
+    }
+}
+
+function limparFormulario() {
+    document.getElementById('nomeLaboratorio').value = '';
+    document.getElementById('codigoSala').value = '';
+    document.getElementById('blocoLocalizacao').value = '';
+    document.getElementById('responsavelTi').value = '';
+    document.getElementById('capMaxAlunos').value = '40';
+    document.getElementById('observacoes').value = '';
+    currentQty = 20;
+    document.getElementById('qtd-display').innerText = currentQty;
+}
+</script>
+</body>
+</html>
